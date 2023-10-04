@@ -2,12 +2,13 @@
 const gameContainer = document.querySelector('#game-container');
 const gameTitle = document.querySelector('#game-title');
 const startBtn = document.querySelector('#start-btn');
+const dialogueBox = document.querySelector('#dialogue-box');
+const pokemonList = document.querySelector('#pokemon-list');
 
 const clickedAudio = new Audio('https://www.fesliyanstudios.com/play-mp3/387');
 
 // Start Game
 startBtn.addEventListener('click', function () {
-	console.log('clicked');
 	clickedAudio.play();
 	startGame();
 });
@@ -18,6 +19,7 @@ function startGame() {
 	gameTitle.style.fontSize = '20px';
 
 	loadPokemon(enemyPokemon, 'enemy-pokemon');
+	loadTrainer();
 }
 
 // Retrieve Pokemon
@@ -88,18 +90,14 @@ function loadPokemon(pokemonArray, pokemonClass) {
 
 	let selectedPokemon = pokemonArray[selectedPokemonIndex];
 
-	console.log(arguments[0]);
-
 	//
 	const pokemonContainer = document.createElement('div');
-	pokemonContainer.setAttribute('class', 'pokemon-container');
+	pokemonContainer.setAttribute('class', `pokemon-container ${pokemonClass}`);
 
 	// Pokemon Image
 	const pokemonImg = document.createElement('img');
-	pokemonImg.setAttribute('class', `pokemon-img ${pokemonClass}`);
+	pokemonImg.setAttribute('class', 'pokemon-img');
 	pokemonImg.src = selectedPokemon.artwork;
-
-	console.log(pokemonImg);
 
 	//Pokemon Stats
 	const pokemonStats = document.createElement('div');
@@ -165,5 +163,30 @@ function loadPokemon(pokemonArray, pokemonClass) {
 
 	pokemonStats.append(pokemonName, pokemonType, healthBarContainer);
 	pokemonContainer.append(pokemonImg, pokemonStats);
+
+	console.log(pokemonContainer);
 	gameContainer.append(pokemonContainer);
+}
+
+// Load Trainer
+function loadTrainer() {
+	const trainerImg = document.createElement('img');
+	trainerImg.src = './images/trainer_sprite_0.png';
+	trainerImg.setAttribute('class', 'trainer-img');
+	gameContainer.append(trainerImg);
+
+	console.log(trainerImg);
+
+	myPokemon.forEach((pokemon) => {
+		const pokemonOption = document.createElement('li');
+		pokemonOption.textContent =
+			pokemon.name.slice(0, 1).toUpperCase() +
+			pokemon.name.slice(1, pokemon.name.length);
+
+		pokemonList.append(pokemonOption);
+	});
+
+	setTimeout(() => {
+		dialogueBox.style.display = 'flex';
+	}, 1000);
 }

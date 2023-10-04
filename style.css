@@ -9,11 +9,12 @@
 	height: 500px;
 	border: 2px solid black;
 	border-radius: 25px;
-	align-items: center;
+	/* align-items: center; */
 	text-align: center;
 	display: flex;
 	flex-direction: column;
 	/* justify-content: center; */
+	position: relative;
 }
 
 #game-title {
@@ -26,6 +27,7 @@
 	font-size: 25px;
 	padding: 10px;
 	background-color: white;
+	margin: 0 auto;
 }
 
 #start-btn:hover {
@@ -100,4 +102,50 @@
 	margin-left: 7px;
 	align-items: center;
 	background-color: white;
+}
+
+.enemy-pokemon {
+	position: absolute;
+	right: 20px;
+	top: 80px;
+}
+
+.trainer-img {
+	height: 100px;
+	width: auto;
+	object-fit: contain;
+	position: absolute;
+	bottom: 80px;
+	left: 100px;
+}
+
+#dialogue-box {
+	width: 300px;
+	height: 150px;
+	border: 1px solid black;
+	border-radius: 15px;
+	display: none;
+	/* justify-content: center; */
+	position: absolute;
+	right: 50px;
+	bottom: 50px;
+	flex-direction: column;
+}
+
+#dialogue-box > p {
+	margin: 10px;
+}
+
+#pokemon-list {
+	display: flex;
+	flex-wrap: wrap;
+	margin: 10px 0 0 35px;
+}
+
+li {
+	list-style: none;
+	width: 50%;
+	text-align: start;
+	margin-bottom: 10px;
+	/* float: left; */
 }
