@@ -3,7 +3,10 @@ const gameContainer = document.querySelector('#game-container');
 const gameTitle = document.querySelector('#game-title');
 const startBtn = document.querySelector('#start-btn');
 const dialogueBox = document.querySelector('#dialogue-box');
-const pokemonList = document.querySelector('#pokemon-list');
+const question = document.querySelector('#question');
+const dialogueList = document.querySelector('#dialogue-list');
+
+const trainerImg = document.createElement('img');
 
 const clickedAudio = new Audio('https://www.fesliyanstudios.com/play-mp3/387');
 
@@ -18,8 +21,14 @@ function startGame() {
 	gameTitle.style.margin = '25px';
 	gameTitle.style.fontSize = '20px';
 
-	loadPokemon(enemyPokemon, 'enemy-pokemon');
+	loadPokemon(selectEnemyPokemon(), 'enemy-pokemon');
 	loadTrainer();
+}
+
+function selectEnemyPokemon() {
+	let selectedPokemonIndex = Math.floor(Math.random() * enemyPokemon.length);
+
+	return enemyPokemon[selectedPokemonIndex];
 }
 
 // Retrieve Pokemon
@@ -83,10 +92,10 @@ enemyPokemonNames.forEach((pokemon) => {
 });
 
 // Load Initial Battle Screen
-function loadPokemon(pokemonArray, pokemonClass) {
-	let selectedPokemonIndex = Math.floor(Math.random() * pokemonArray.length);
+function loadPokemon(selectedPokemon, pokemonClass) {
+	// let selectedPokemonIndex = Math.floor(Math.random() * pokemonArray.length);
 
-	let selectedPokemon = pokemonArray[selectedPokemonIndex];
+	// let selectedPokemon = pokemonArray[selectedPokemonIndex];
 
 	//
 	const pokemonContainer = document.createElement('div');
@@ -165,7 +174,6 @@ function loadPokemon(pokemonArray, pokemonClass) {
 
 // Load Trainer
 function loadTrainer() {
-	const trainerImg = document.createElement('img');
 	trainerImg.src = './images/trainer_sprite_0.png';
 	trainerImg.setAttribute('class', 'trainer-img');
 	gameContainer.append(trainerImg);
@@ -176,21 +184,47 @@ function loadTrainer() {
 			pokemon.name.slice(0, 1).toUpperCase() +
 			pokemon.name.slice(1, pokemon.name.length);
 
-		pokemonList.append(pokemonOption);
+		dialogueList.append(pokemonOption);
 	});
 
 	setTimeout(() => {
 		dialogueBox.style.display = 'flex';
 	}, 1000);
 
-	pokemonList.addEventListener('click', (event) => {
+	dialogueList.addEventListener('click', (event) => {
 		let selectedPokemon = myPokemon.filter((option) => {
 			return option.name === event.target.textContent.toLowerCase();
 		});
 
-		// console.log(event.target.textContent.toLowerCase());
-		// selectedIndex = myPokemon.indexOf(event.target.textContent.toLowerCase());
-
-		console.log(selectedPokemon[0]);
+		loadMyPokemon(selectedPokemon[0]);
 	});
+}
+
+// Load my pokemon
+let imageIndex = 0;
+
+function loadMyPokemon(selectedPokemon) {
+	setTimeout(() => {
+		trainerImg.src = `./images/trainer_sprite_${imageIndex}.png`;
+
+		if (imageIndex < 4) {
+			loadMyPokemon(selectedPokemon);
+			imageIndex++;
+		} else {
+			trainerImg.style.display = 'none';
+			loadPokemon(selectedPokemon, 'my-pokemon');
+
+			dialogueBox.style.height = '80px';
+			dialogueBox.style.bottom = '100px';
+			question.textContent = 'What move will you pick?';
+			dialogueList.style.marginTop = '15px';
+			dialogueList.textContent = '';
+			selectedPokemon.moves.forEach((move) => {
+				console.log(move);
+				const moveName = document.createElement('li');
+				moveName.textContent = move.move.name;
+				dialogueList.append(moveName);
+			});
+		}
+	}, 500);
 }

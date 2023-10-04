@@ -87,7 +87,7 @@
 	right: 0;
 	top: 50%;
 	align-items: center;
-	/* justify-content: center; */
+	margin-right: 2px;
 	padding-left: 7px;
 }
 
@@ -110,36 +110,43 @@
 	top: 80px;
 }
 
+.my-pokemon {
+	position: absolute;
+	left: 70px;
+	bottom: 125px;
+}
+
 .trainer-img {
 	height: 100px;
 	width: auto;
 	object-fit: contain;
 	position: absolute;
-	bottom: 80px;
+	bottom: 120px;
 	left: 100px;
 }
 
 #dialogue-box {
 	width: 300px;
-	height: 150px;
+	height: 100px;
 	border: 1px solid black;
 	border-radius: 15px;
+	background-color: white;
 	display: none;
-	/* justify-content: center; */
 	position: absolute;
 	right: 50px;
-	bottom: 50px;
+	bottom: 80px;
 	flex-direction: column;
+	z-index: 1;
 }
 
 #dialogue-box > p {
 	margin: 10px;
 }
 
-#pokemon-list {
+#dialogue-list {
 	display: flex;
 	flex-wrap: wrap;
-	margin: 10px 0 0 35px;
+	margin: 10px 25px;
 }
 
 li {
@@ -154,4 +161,17 @@ li:hover {
 	cursor: pointer;
 	text-decoration: underline;
 	font-weight: bold;
+	list-style: square;
+}
+
+#chat-box {
+	height: 118px;
+	width: calc(100% - 20px);
+	position: absolute;
+	bottom: 0;
+	z-index: -1;
+	display: flex;
+	align-items: center;
+	padding-left: 20px;
+	border-top: 2px solid black;
 }
