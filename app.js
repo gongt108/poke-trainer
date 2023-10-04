@@ -10,6 +10,41 @@ const trainerImg = document.createElement('img');
 
 const clickedAudio = new Audio('https://www.fesliyanstudios.com/play-mp3/387');
 
+let enemyPokemonType;
+
+const typeWeakness = {
+	ghost: {
+		'no effect': ['normal', 'fighting'],
+		'not very effective': ['bug', 'poison'],
+		'super effective': ['ghost'],
+	},
+	bug: {
+		'no effect': [],
+		'not very effective': ['fight', 'grass', 'ground'],
+		'super effective': ['fire', 'fighting', 'poison', 'rock'],
+	},
+	water: {
+		'no effect': [],
+		'not very effective': ['fire', 'ice', 'water'],
+		'super effective': ['electric', 'grass'],
+	},
+	electric: {
+		'no effect': [],
+		'not very effective': ['electric', 'flying'],
+		'super effective': ['ground'],
+	},
+	normal: {
+		'no effect': ['ghost'],
+		'not very effective': [],
+		'super effective': ['fighting'],
+	},
+	poison: {
+		'no effect': [],
+		'not very effective': ['fight', 'grass', 'poison'],
+		'super effective': ['ground', 'bug', 'psychic'],
+	},
+};
+
 // Start Game
 startBtn.addEventListener('click', function () {
 	clickedAudio.play();
@@ -55,8 +90,6 @@ function fetchPokemon(pokemon, pokemonArray) {
 			return response.json();
 		})
 		.then((data) => {
-			// console.log(data);
-
 			const newPokemon = new Pokemon(
 				data.name,
 				data.sprites.other['official-artwork'].front_default,
@@ -93,11 +126,6 @@ enemyPokemonNames.forEach((pokemon) => {
 
 // Load Initial Battle Screen
 function loadPokemon(selectedPokemon, pokemonClass) {
-	// let selectedPokemonIndex = Math.floor(Math.random() * pokemonArray.length);
-
-	// let selectedPokemon = pokemonArray[selectedPokemonIndex];
-
-	//
 	const pokemonContainer = document.createElement('div');
 	pokemonContainer.setAttribute('class', `pokemon-container ${pokemonClass}`);
 
@@ -120,6 +148,9 @@ function loadPokemon(selectedPokemon, pokemonClass) {
 	const pokemonType = document.createElement('p');
 	pokemonType.setAttribute('class', 'pokemon-type');
 	pokemonType.textContent = selectedPokemon.type;
+	if (pokemonClass === 'enemy-pokemon') {
+		enemyPokemonType = selectedPokemon.type;
+	}
 
 	let pokemonTypeColor = 'palegoldrenrod';
 
@@ -150,6 +181,9 @@ function loadPokemon(selectedPokemon, pokemonClass) {
 			break;
 		case 'fighting':
 			pokemonTypeColor = 'brown';
+			break;
+		case 'bug':
+			pokemonTypeColor = 'olive';
 			break;
 		default:
 			pokemonTypeColor = 'grey';
@@ -191,12 +225,14 @@ function loadTrainer() {
 		dialogueBox.style.display = 'flex';
 	}, 1000);
 
-	dialogueList.addEventListener('click', (event) => {
+	dialogueList.addEventListener('click', function pokemonSelection(event) {
 		let selectedPokemon = myPokemon.filter((option) => {
 			return option.name === event.target.textContent.toLowerCase();
 		});
 
 		loadMyPokemon(selectedPokemon[0]);
+		dialogueList.removeEventListener('click', pokemonSelection);
+		console.log('still running');
 	});
 }
 
@@ -225,6 +261,42 @@ function loadMyPokemon(selectedPokemon) {
 				moveName.textContent = move.move.name;
 				dialogueList.append(moveName);
 			});
+
+			dialogueList.addEventListener('click', function moveSelection(event) {
+				console.log(event.target.textContent);
+				getMoveType();
+			});
 		}
 	}, 500);
+}
+
+// Attack
+function getMoveType() {
+	fetch(`https://pokeapi.co/api/v2/move/scratch`)
+		.then((response) => {
+			return response.json();
+		})
+		.then((data) => {
+			console.log(data.type.name);
+			let moveType = data.type.name;
+			attack(moveType);
+		})
+		.catch((error) => {
+			console.log('error fetching data', error);
+		});
+}
+
+function attack(moveType) {
+	console.log(enemyPokemonType);
+	if (typeWeakness[enemyPokemonType]['super effective'].includes(moveType)) {
+		console.log('found');
+	} else if (
+		typeWeakness[enemyPokemonType]['not very effective'].includes(moveType)
+	) {
+		console.log('boo');
+	} else if (typeWeakness[enemyPokemonType]['no effect'].includes(moveType)) {
+		console.log('try again');
+	} else {
+		console.log('ehh');
+	}
 }
