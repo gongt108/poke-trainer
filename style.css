@@ -149,3 +149,9 @@ li {
 	margin-bottom: 10px;
 	/* float: left; */
 }
+
+li:hover {
+	cursor: pointer;
+	text-decoration: underline;
+	font-weight: bold;
+}

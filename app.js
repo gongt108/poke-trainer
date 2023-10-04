@@ -82,8 +82,6 @@ enemyPokemonNames.forEach((pokemon) => {
 	fetchPokemon(pokemon, enemyPokemon);
 });
 
-// console.log(enemyPokemon);
-
 // Load Initial Battle Screen
 function loadPokemon(pokemonArray, pokemonClass) {
 	let selectedPokemonIndex = Math.floor(Math.random() * pokemonArray.length);
@@ -106,7 +104,6 @@ function loadPokemon(pokemonArray, pokemonClass) {
 	const pokemonName = document.createElement('p');
 	pokemonName.setAttribute('class', 'pokemon-name');
 
-	console.log(selectedPokemon.name);
 	pokemonName.textContent =
 		selectedPokemon.name.slice(0, 1).toUpperCase() +
 		selectedPokemon.name.slice(1, selectedPokemon.name.length);
@@ -149,7 +146,6 @@ function loadPokemon(pokemonArray, pokemonClass) {
 			pokemonTypeColor = 'grey';
 	}
 
-	console.log(pokemonTypeColor);
 	pokemonType.style.backgroundColor = pokemonTypeColor;
 
 	const healthBarContainer = document.createElement('div');
@@ -164,7 +160,6 @@ function loadPokemon(pokemonArray, pokemonClass) {
 	pokemonStats.append(pokemonName, pokemonType, healthBarContainer);
 	pokemonContainer.append(pokemonImg, pokemonStats);
 
-	console.log(pokemonContainer);
 	gameContainer.append(pokemonContainer);
 }
 
@@ -174,8 +169,6 @@ function loadTrainer() {
 	trainerImg.src = './images/trainer_sprite_0.png';
 	trainerImg.setAttribute('class', 'trainer-img');
 	gameContainer.append(trainerImg);
-
-	console.log(trainerImg);
 
 	myPokemon.forEach((pokemon) => {
 		const pokemonOption = document.createElement('li');
@@ -189,4 +182,15 @@ function loadTrainer() {
 	setTimeout(() => {
 		dialogueBox.style.display = 'flex';
 	}, 1000);
+
+	pokemonList.addEventListener('click', (event) => {
+		let selectedPokemon = myPokemon.filter((option) => {
+			return option.name === event.target.textContent.toLowerCase();
+		});
+
+		// console.log(event.target.textContent.toLowerCase());
+		// selectedIndex = myPokemon.indexOf(event.target.textContent.toLowerCase());
+
+		console.log(selectedPokemon[0]);
+	});
 }
