@@ -5,12 +5,17 @@ const startBtn = document.querySelector('#start-btn');
 const dialogueBox = document.querySelector('#dialogue-box');
 const question = document.querySelector('#question');
 const dialogueList = document.querySelector('#dialogue-list');
+const chatBox = document.querySelector('#chat-box');
 
 const trainerImg = document.createElement('img');
 
 const clickedAudio = new Audio('https://www.fesliyanstudios.com/play-mp3/387');
 
+let myPokemon;
+let enemyPokemon;
 let enemyPokemonType;
+const myPokemonList = [];
+const enemyPokemonList = [];
 
 const typeWeakness = {
 	ghost: {
@@ -44,27 +49,6 @@ const typeWeakness = {
 		'super effective': ['ground', 'bug', 'psychic'],
 	},
 };
-
-// Start Game
-startBtn.addEventListener('click', function () {
-	clickedAudio.play();
-	startGame();
-});
-
-function startGame() {
-	startBtn.style.display = 'none';
-	gameTitle.style.margin = '25px';
-	gameTitle.style.fontSize = '20px';
-
-	loadPokemon(selectEnemyPokemon(), 'enemy-pokemon');
-	loadTrainer();
-}
-
-function selectEnemyPokemon() {
-	let selectedPokemonIndex = Math.floor(Math.random() * enemyPokemon.length);
-
-	return enemyPokemon[selectedPokemonIndex];
-}
 
 // Retrieve Pokemon
 const myPokemonNames = [
@@ -104,6 +88,39 @@ function fetchPokemon(pokemon, pokemonArray) {
 		});
 }
 
+myPokemonNames.forEach((pokemon) => {
+	fetchPokemon(pokemon, myPokemonList);
+});
+
+enemyPokemonNames.forEach((pokemon) => {
+	fetchPokemon(pokemon, enemyPokemonList);
+});
+
+// Start Game
+startBtn.addEventListener('click', function () {
+	clickedAudio.play();
+
+	startGame();
+});
+
+function startGame() {
+	startBtn.style.display = 'none';
+	gameTitle.style.margin = '25px';
+	gameTitle.style.fontSize = '20px';
+	chatBox.style.display = 'flex';
+	loadPokemon(selectEnemyPokemon(), 'enemy-pokemon');
+
+	loadTrainer();
+}
+
+function selectEnemyPokemon() {
+	let selectedPokemonIndex = Math.floor(
+		Math.random() * enemyPokemonList.length
+	);
+
+	return enemyPokemonList[selectedPokemonIndex];
+}
+
 class Pokemon {
 	constructor(name, artwork, moves, type) {
 		this.name = name;
@@ -112,17 +129,6 @@ class Pokemon {
 		this.type = type;
 	}
 }
-
-const myPokemon = [];
-const enemyPokemon = [];
-
-myPokemonNames.forEach((pokemon) => {
-	fetchPokemon(pokemon, myPokemon);
-});
-
-enemyPokemonNames.forEach((pokemon) => {
-	fetchPokemon(pokemon, enemyPokemon);
-});
 
 // Load Initial Battle Screen
 function loadPokemon(selectedPokemon, pokemonClass) {
@@ -140,8 +146,7 @@ function loadPokemon(selectedPokemon, pokemonClass) {
 
 	const pokemonName = document.createElement('p');
 	pokemonName.setAttribute('class', 'pokemon-name');
-
-	pokemonName.textContent =
+	let name =
 		selectedPokemon.name.slice(0, 1).toUpperCase() +
 		selectedPokemon.name.slice(1, selectedPokemon.name.length);
 
@@ -150,7 +155,13 @@ function loadPokemon(selectedPokemon, pokemonClass) {
 	pokemonType.textContent = selectedPokemon.type;
 	if (pokemonClass === 'enemy-pokemon') {
 		enemyPokemonType = selectedPokemon.type;
+		enemyPokemon = name;
+		question.textContent = `A wild ${enemyPokemon} has appeared`;
+	} else {
+		myPokemon = name;
 	}
+
+	pokemonName.textContent = name;
 
 	let pokemonTypeColor = 'palegoldrenrod';
 
@@ -212,7 +223,7 @@ function loadTrainer() {
 	trainerImg.setAttribute('class', 'trainer-img');
 	gameContainer.append(trainerImg);
 
-	myPokemon.forEach((pokemon) => {
+	myPokemonList.forEach((pokemon) => {
 		const pokemonOption = document.createElement('li');
 		pokemonOption.textContent =
 			pokemon.name.slice(0, 1).toUpperCase() +
@@ -223,16 +234,19 @@ function loadTrainer() {
 
 	setTimeout(() => {
 		dialogueBox.style.display = 'flex';
-	}, 1000);
+	}, 3000);
 
 	dialogueList.addEventListener('click', function pokemonSelection(event) {
-		let selectedPokemon = myPokemon.filter((option) => {
+		let selectedPokemon = myPokemonList.filter((option) => {
 			return option.name === event.target.textContent.toLowerCase();
 		});
 
-		loadMyPokemon(selectedPokemon[0]);
-		dialogueList.removeEventListener('click', pokemonSelection);
-		console.log('still running');
+		if (selectedPokemon[0]) {
+			loadMyPokemon(selectedPokemon[0]);
+			dialogueList.removeEventListener('click', pokemonSelection);
+
+			dialogueBox.style.display = 'none';
+		}
 	});
 }
 
@@ -245,10 +259,13 @@ function loadMyPokemon(selectedPokemon) {
 
 		if (imageIndex < 4) {
 			loadMyPokemon(selectedPokemon);
+			question.textContent = `${selectedPokemon.name}, I choose you!`;
+
 			imageIndex++;
 		} else {
 			trainerImg.style.display = 'none';
 			loadPokemon(selectedPokemon, 'my-pokemon');
+			dialogueBox.style.display = 'flex';
 
 			dialogueBox.style.height = '80px';
 			dialogueBox.style.bottom = '100px';
@@ -256,47 +273,103 @@ function loadMyPokemon(selectedPokemon) {
 			dialogueList.style.marginTop = '15px';
 			dialogueList.textContent = '';
 			selectedPokemon.moves.forEach((move) => {
-				console.log(move);
 				const moveName = document.createElement('li');
-				moveName.textContent = move.move.name;
+				moveName.textContent = move.move.name.split('-').join(' ');
+				moveName.className = move.move.name;
 				dialogueList.append(moveName);
 			});
 
 			dialogueList.addEventListener('click', function moveSelection(event) {
-				console.log(event.target.textContent);
-				getMoveType();
+				getMoveType(event.target.className, event.target.textContent);
 			});
 		}
 	}, 500);
 }
 
 // Attack
-function getMoveType() {
-	fetch(`https://pokeapi.co/api/v2/move/scratch`)
+function getMoveType(move, moveName) {
+	fetch(`https://pokeapi.co/api/v2/move/${move}`)
 		.then((response) => {
 			return response.json();
 		})
 		.then((data) => {
-			console.log(data.type.name);
 			let moveType = data.type.name;
-			attack(moveType);
+			attack(moveType, moveName);
 		})
 		.catch((error) => {
 			console.log('error fetching data', error);
 		});
 }
 
-function attack(moveType) {
-	console.log(enemyPokemonType);
+function attack(moveType, moveName) {
+	dialogueBox.style.display = 'none';
+
+	const enemyHealthBar = document
+		.querySelector('.enemy-pokemon')
+		.querySelector('.health-bar');
+
+	const myHealthBar = document
+		.querySelector('.my-pokemon')
+		.querySelector('.health-bar');
+
+	let damage;
+	let enemyDamage = 20;
+	let attackMessage = `${enemyPokemon} used SCRATCH.`;
+
 	if (typeWeakness[enemyPokemonType]['super effective'].includes(moveType)) {
-		console.log('found');
+		damage = 30;
+		question.textContent = `${myPokemon} used ${moveName}. It's super effective!`;
 	} else if (
 		typeWeakness[enemyPokemonType]['not very effective'].includes(moveType)
 	) {
-		console.log('boo');
+		damage = 10;
+		enemyDamage = 30;
+		question.textContent = `${myPokemon} used ${moveName}. It's not very effective`;
+		attackMessage = `${attackMessage} It was a critical hit!`;
 	} else if (typeWeakness[enemyPokemonType]['no effect'].includes(moveType)) {
-		console.log('try again');
+		damage = 0;
+		enemyDamage = 39;
+		question.textContent = `${myPokemon} used ${moveName}. It has no effect`;
 	} else {
-		console.log('ehh');
+		damage = 20;
+		question.textContent = `${myPokemon} used ${moveName}.`;
 	}
+	enemyHealthBar.style.width =
+		enemyHealthBar.offsetWidth - damage > 0
+			? `${enemyHealthBar.offsetWidth - damage}px`
+			: 0;
+	console.log(enemyHealthBar.style.width);
+	if (enemyHealthBar.offsetWidth - damage <= 0) {
+		enemyHealthBar.style.width = '0px';
+		setTimeout(() => {
+			alert(`${enemyPokemon} fainted! Good job!`);
+			endGame();
+			return;
+		}, 1000);
+	} else {
+		setTimeout(() => {
+			question.textContent = attackMessage;
+			myHealthBar.style.width =
+				myHealthBar.offsetWidth - enemyDamage > 0
+					? `${myHealthBar.offsetWidth - enemyDamage}px`
+					: 0;
+
+			setTimeout(() => {
+				if (myHealthBar.offsetWidth - damage <= 0) {
+					myHealthBar.style.width = '0px';
+					alert(`${myPokemon} fainted! Maybe you should've picked better!`);
+					endGame();
+					return;
+				} else {
+					question.textContent = 'What move will you pick?';
+					dialogueBox.style.display = 'flex';
+				}
+			}, 1000);
+		}, 2000);
+	}
+}
+
+function endGame() {
+	alert('Play again?');
+	location.reload();
 }
