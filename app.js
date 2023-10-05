@@ -136,9 +136,12 @@ function loadPokemon(selectedPokemon, pokemonClass) {
 	pokemonContainer.setAttribute('class', `pokemon-container ${pokemonClass}`);
 
 	// Pokemon Image
+	const pokemonImgContainer = document.createElement('div');
+	pokemonImgContainer.setAttribute('class', 'pokemon-img-container');
 	const pokemonImg = document.createElement('img');
 	pokemonImg.setAttribute('class', 'pokemon-img');
 	pokemonImg.src = selectedPokemon.artwork;
+	pokemonImgContainer.append(pokemonImg);
 
 	//Pokemon Stats
 	const pokemonStats = document.createElement('div');
@@ -156,7 +159,9 @@ function loadPokemon(selectedPokemon, pokemonClass) {
 	if (pokemonClass === 'enemy-pokemon') {
 		enemyPokemonType = selectedPokemon.type;
 		enemyPokemon = name;
-		question.textContent = `A wild ${enemyPokemon} has appeared`;
+		setTimeout(() => {
+			question.textContent = `A wild ${enemyPokemon} has appeared`;
+		}, 1000);
 	} else {
 		myPokemon = name;
 	}
@@ -212,7 +217,7 @@ function loadPokemon(selectedPokemon, pokemonClass) {
 	healthBarContainer.append(hpSpan, healthBar);
 
 	pokemonStats.append(pokemonName, pokemonType, healthBarContainer);
-	pokemonContainer.append(pokemonImg, pokemonStats);
+	pokemonContainer.append(pokemonImgContainer, pokemonStats);
 
 	gameContainer.append(pokemonContainer);
 }
@@ -233,6 +238,7 @@ function loadTrainer() {
 	});
 
 	setTimeout(() => {
+		question.textContent = 'Which Pokemon will you choose?';
 		dialogueBox.style.display = 'flex';
 	}, 3000);
 
@@ -338,14 +344,18 @@ function attack(moveType, moveName) {
 		enemyHealthBar.offsetWidth - damage > 0
 			? `${enemyHealthBar.offsetWidth - damage}px`
 			: 0;
-	console.log(enemyHealthBar.style.width);
-	if (enemyHealthBar.offsetWidth - damage <= 0) {
+	if (enemyHealthBar.offsetWidth <= 0) {
 		enemyHealthBar.style.width = '0px';
+		let faintedPokemon = document
+			.querySelector('.enemy-pokemon')
+			.querySelector('.pokemon-img-container')
+			.querySelector('.pokemon-img');
+		faintedPokemon.className += ' fainted';
 		setTimeout(() => {
 			alert(`${enemyPokemon} fainted! Good job!`);
 			endGame();
 			return;
-		}, 1000);
+		}, 4000);
 	} else {
 		setTimeout(() => {
 			question.textContent = attackMessage;
@@ -355,8 +365,9 @@ function attack(moveType, moveName) {
 					: 0;
 
 			setTimeout(() => {
-				if (myHealthBar.offsetWidth - damage <= 0) {
+				if (myHealthBar.offsetWidth <= 0) {
 					myHealthBar.style.width = '0px';
+
 					alert(`${myPokemon} fainted! Maybe you should've picked better!`);
 					endGame();
 					return;
