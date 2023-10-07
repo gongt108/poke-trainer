@@ -1,10 +1,22 @@
-# poke-trainer
+# Poké Trainer
 
-<!-- Screenshot images of game -->
+### Images of working App
 
-<!-- Explanations of the technologies -->
+![firstScreen](./images/game/home-page.png)
+![secondScreen](./images/game/pokemon-selection.png)
+![thirdScreen](./images/game/move-selection.png)
+![fourthScreen](./images/game/attacked.png)
+![fifthScreen](./images/game/blew-away.png)
+![sixthScreen](./images/game/you-win.png)
+![seventhScren](./images/game/you-lose.png)
+![eighthScreen](./images/game/play-again.png)
 
-Built using HTML, CSS, Vanilla JS, and Pokemon API
+## Technologies
+
+- HTML
+- CSS
+- JavaScript/
+- [Pokemon API](https://pokeapi.co/)
 
 <!-- Installation Instruction -->
 
@@ -16,8 +28,8 @@ To begin, fork and clone the repository. Open index.html in browser to begin gam
 
 <!-- Unsolved Problems -->
 
-[] Adding music for battle
-[] Add attack animation
+[x] Adding music for battle
+[x] Add attack animation
 
 <!-- Stretch Goals -->
 
