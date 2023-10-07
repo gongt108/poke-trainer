@@ -13,6 +13,12 @@ slashImg.src = 'images/slash-removebg-preview.png';
 slashImg.setAttribute('class', 'slash-effect');
 
 const clickedAudio = new Audio('https://www.fesliyanstudios.com/play-mp3/387');
+const battleAudio = new Audio(
+	'https://vgmsite.com/soundtracks/pokemon-ruby-sapphire-and-emerald-remastered-soundtrack-gba-gamerip-2002-2005/gkugozdqaf/79.%20Wild%20Battle.mp3'
+);
+const attackAudio = new Audio(
+	'https://vgmsite.com/soundtracks/pokemon-sfx-gen-3-attack-moves-rse-fr-lg/bjxgpmfyyj/Comet%20Punch%201hit.mp3'
+);
 
 let myPokemon;
 let enemyPokemon;
@@ -110,8 +116,11 @@ function startGame() {
 	gameTitle.style.margin = '25px';
 	gameTitle.style.fontSize = '20px';
 	chatBox.style.display = 'flex';
-	loadPokemon(selectEnemyPokemon(), 'enemy-pokemon');
 
+	setTimeout(() => {
+		battleAudio.play();
+	}, 1000);
+	loadPokemon(selectEnemyPokemon(), 'enemy-pokemon');
 	loadTrainer();
 }
 
@@ -327,6 +336,7 @@ function attack(moveType, moveName) {
 	if (typeWeakness[enemyPokemonType]['super effective'].includes(moveType)) {
 		damage = 30;
 		question.textContent = `${myPokemon} used ${moveName}. It's super effective!`;
+		addAttackAnimation('enemy-pokemon');
 	} else if (
 		typeWeakness[enemyPokemonType]['not very effective'].includes(moveType)
 	) {
@@ -334,11 +344,12 @@ function attack(moveType, moveName) {
 		enemyDamage = 30;
 		question.textContent = `${myPokemon} used ${moveName}. It's not very effective`;
 		attackMessage = `${attackMessage} It was a critical hit!`;
+		addAttackAnimation('enemy-pokemon');
 	} else if (typeWeakness[enemyPokemonType]['no effect'].includes(moveType)) {
 		damage = 0;
 		enemyDamage = 39;
 		question.textContent = `${myPokemon} used ${moveName}. It has no effect`;
-	} else if (moveName === 'sword dance') {
+	} else if (moveName === 'swords dance') {
 		damage = 0;
 		enemyDamage = 20;
 		question.textContent = `${myPokemon} used ${moveName}. ${myPokemon} was buffed.`;
@@ -349,9 +360,8 @@ function attack(moveType, moveName) {
 	} else {
 		damage = 20;
 		question.textContent = `${myPokemon} used ${moveName}.`;
+		addAttackAnimation('enemy-pokemon');
 	}
-
-	addAttackAnimation('enemy-pokemon');
 
 	enemyHealthBar.style.width =
 		enemyHealthBar.offsetWidth - damage > 0
@@ -372,6 +382,8 @@ function attack(moveType, moveName) {
 	} else {
 		setTimeout(() => {
 			question.textContent = attackMessage;
+			addAttackAnimation('my-pokemon');
+
 			myHealthBar.style.width =
 				myHealthBar.offsetWidth - enemyDamage > 0
 					? `${myHealthBar.offsetWidth - enemyDamage}px`
@@ -400,6 +412,7 @@ function endGame() {
 
 // Attack animation
 function addAttackAnimation(pokemon) {
+	attackAudio.play();
 	let healthBar = document
 		.querySelector(`.${pokemon}`)
 		.querySelector('.health-bar-container');
