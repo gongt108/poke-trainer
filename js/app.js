@@ -26,39 +26,6 @@ let enemyPokemonType;
 const myPokemonList = [];
 const enemyPokemonList = [];
 
-const typeWeakness = {
-	ghost: {
-		'no effect': ['normal', 'fighting'],
-		'not very effective': ['bug', 'poison'],
-		'super effective': ['ghost'],
-	},
-	bug: {
-		'no effect': [],
-		'not very effective': ['fight', 'grass', 'ground'],
-		'super effective': ['fire', 'fighting', 'poison', 'rock'],
-	},
-	water: {
-		'no effect': [],
-		'not very effective': ['fire', 'ice', 'water'],
-		'super effective': ['electric', 'grass'],
-	},
-	electric: {
-		'no effect': [],
-		'not very effective': ['electric', 'flying'],
-		'super effective': ['ground'],
-	},
-	normal: {
-		'no effect': ['ghost'],
-		'not very effective': [],
-		'super effective': ['fighting'],
-	},
-	poison: {
-		'no effect': [],
-		'not very effective': ['fight', 'grass', 'poison'],
-		'super effective': ['ground', 'bug', 'psychic'],
-	},
-};
-
 // Retrieve Pokemon
 const myPokemonNames = [
 	'charmander',
@@ -235,7 +202,7 @@ function loadPokemon(selectedPokemon, pokemonClass) {
 
 // Load Trainer
 function loadTrainer() {
-	trainerImg.src = './images/trainer_sprite_0.png';
+	trainerImg.src = 'images/trainer_sprite_0.png';
 	trainerImg.setAttribute('class', 'trainer-img');
 	gameContainer.append(trainerImg);
 
@@ -272,7 +239,7 @@ let imageIndex = 0;
 
 function loadMyPokemon(selectedPokemon) {
 	setTimeout(() => {
-		trainerImg.src = `./images/trainer_sprite_${imageIndex}.png`;
+		trainerImg.src = `images/trainer_sprite_${imageIndex}.png`;
 
 		if (imageIndex < 4) {
 			loadMyPokemon(selectedPokemon);
