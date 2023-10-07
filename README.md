@@ -6,12 +6,9 @@ Poké Trainer is a battle simulator. The goal of the simulator is to teach you t
 
 ![firstScreen](./images/game/home-page.png)
 ![secondScreen](./images/game/pokemon-selection.png)
-![thirdScreen](./images/game/move-selection.png)
-![fourthScreen](./images/game/attacked.png)
-![fifthScreen](./images/game/blew-away.png)
-![sixthScreen](./images/game/you-win.png)
-![seventhScren](./images/game/you-lose.png)
-![eighthScreen](./images/game/play-again.png)
+![thirdScreen](./images/game/attacked.png)
+![fourthScreen](./images/game/you-win.png)
+![fifthScreen](./images/game/play-again.png)
 
 ## Technologies
 
@@ -142,4 +139,5 @@ function addAttackAnimation(pokemon) {
 ## Future Enhancement
 
 [] Find an API that contains the type weaknesses so that it doesn't have to be hard coded into the JS file.
+
 [] Allow users to select their own pokemon in battle
