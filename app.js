@@ -8,6 +8,9 @@ const dialogueList = document.querySelector('#dialogue-list');
 const chatBox = document.querySelector('#chat-box');
 
 const trainerImg = document.createElement('img');
+const slashImg = document.createElement('img');
+slashImg.src = 'images/slash-removebg-preview.png';
+slashImg.setAttribute('class', 'slash-effect');
 
 const clickedAudio = new Audio('https://www.fesliyanstudios.com/play-mp3/387');
 
@@ -99,7 +102,6 @@ enemyPokemonNames.forEach((pokemon) => {
 // Start Game
 startBtn.addEventListener('click', function () {
 	clickedAudio.play();
-
 	startGame();
 });
 
@@ -336,10 +338,21 @@ function attack(moveType, moveName) {
 		damage = 0;
 		enemyDamage = 39;
 		question.textContent = `${myPokemon} used ${moveName}. It has no effect`;
+	} else if (moveName === 'sword dance') {
+		damage = 0;
+		enemyDamage = 20;
+		question.textContent = `${myPokemon} used ${moveName}. ${myPokemon} was buffed.`;
+	} else if (moveName === 'whirlwind') {
+		alert('Oops. You blew the wild Pokemon away.');
+		endGame();
+		return;
 	} else {
 		damage = 20;
 		question.textContent = `${myPokemon} used ${moveName}.`;
 	}
+
+	addAttackAnimation('enemy-pokemon');
+
 	enemyHealthBar.style.width =
 		enemyHealthBar.offsetWidth - damage > 0
 			? `${enemyHealthBar.offsetWidth - damage}px`
@@ -383,4 +396,32 @@ function attack(moveType, moveName) {
 function endGame() {
 	alert('Play again?');
 	location.reload();
+}
+
+// Attack animation
+function addAttackAnimation(pokemon) {
+	let healthBar = document
+		.querySelector(`.${pokemon}`)
+		.querySelector('.health-bar-container');
+	let pokemonImage = document
+		.querySelector(`.${pokemon}`)
+		.querySelector('.pokemon-img');
+
+	pokemonImage.parentNode.append(slashImg);
+	slashImg.style.animation = 'slashed 1s';
+
+	healthBar.style.animation = 'flicker 0.75s';
+	healthBar.style.animationIterationCount = '2';
+
+	pokemonImage.style.animation = 'flicker 0.5s';
+	pokemonImage.style.animationIterationCount = '3';
+
+	setTimeout(() => {
+		pokemonImage.parentNode.removeChild(slashImg);
+		slashImg.style.animation = '';
+	}, 1000);
+	setTimeout(() => {
+		healthBar.style.animation = '';
+		pokemonImage.style.animation = '';
+	}, 2000);
 }
