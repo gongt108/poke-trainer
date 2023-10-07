@@ -345,14 +345,14 @@ function attack(moveType, moveName) {
 		question.textContent = `${myPokemon} used ${moveName}. It's not very effective`;
 		attackMessage = `${attackMessage} It was a critical hit!`;
 		addAttackAnimation('enemy-pokemon');
-	} else if (typeWeakness[enemyPokemonType]['no effect'].includes(moveType)) {
-		damage = 0;
-		enemyDamage = 39;
-		question.textContent = `${myPokemon} used ${moveName}. It has no effect`;
 	} else if (moveName === 'swords dance') {
 		damage = 0;
 		enemyDamage = 20;
 		question.textContent = `${myPokemon} used ${moveName}. ${myPokemon} was buffed.`;
+	} else if (typeWeakness[enemyPokemonType]['no effect'].includes(moveType)) {
+		damage = 0;
+		enemyDamage = 39;
+		question.textContent = `${myPokemon} used ${moveName}. It has no effect`;
 	} else if (moveName === 'whirlwind') {
 		alert('Oops. You blew the wild Pokemon away.');
 		endGame();
