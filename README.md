@@ -136,8 +136,11 @@ function addAttackAnimation(pokemon) {
 }
 ```
 
+## Unsolved Problems
+
+- Using the keydown event to select menu options
+
 ## Future Enhancement
 
-[] Find an API that contains the type weaknesses so that it doesn't have to be hard coded into the JS file.
-
-[] Allow users to select their own pokemon in battle
+- Find an API that contains the type weaknesses so that it doesn't have to be hard coded into the JS file.
+- Allow users to select their own pokemon in battle
