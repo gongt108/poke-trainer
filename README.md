@@ -143,6 +143,7 @@ function addAttackAnimation(pokemon) {
 ## Unsolved Problems
 
 [x] Using the keydown event to select menu options
+
 [] Display slash effect in Chrome
 
 ## Future Enhancement
