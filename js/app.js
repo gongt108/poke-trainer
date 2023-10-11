@@ -16,6 +16,7 @@ const clickedAudio = new Audio('https://www.fesliyanstudios.com/play-mp3/387');
 const battleAudio = new Audio(
 	'https://vgmsite.com/soundtracks/pokemon-ruby-sapphire-and-emerald-remastered-soundtrack-gba-gamerip-2002-2005/gkugozdqaf/79.%20Wild%20Battle.mp3'
 );
+battleAudio.volume = 0.1;
 const attackAudio = new Audio(
 	'https://vgmsite.com/soundtracks/pokemon-sfx-gen-3-attack-moves-rse-fr-lg/bjxgpmfyyj/Comet%20Punch%201hit.mp3'
 );
@@ -220,18 +221,64 @@ function loadTrainer() {
 		dialogueBox.style.display = 'flex';
 	}, 3000);
 
-	dialogueList.addEventListener('click', function pokemonSelection(event) {
+	dialogueList.addEventListener('click', function pokemonClickSelection(event) {
 		let selectedPokemon = myPokemonList.filter((option) => {
 			return option.name === event.target.textContent.toLowerCase();
 		});
 
 		if (selectedPokemon[0]) {
 			loadMyPokemon(selectedPokemon[0]);
-			dialogueList.removeEventListener('click', pokemonSelection);
+			dialogueList.removeEventListener('click', pokemonClickSelection);
 
 			dialogueBox.style.display = 'none';
 		}
 	});
+
+	document.addEventListener(
+		'keydown',
+		function pokemonKeyboardSelection(event) {
+			let currentSelection = document.querySelector('.active');
+
+			if (!currentSelection) {
+				dialogueList.children[0].className += ' active';
+			} else if (currentSelection.classList) {
+				currentSelection.classList.remove('active');
+			}
+
+			if (event.key === 'ArrowUp') {
+				currentSelection !== dialogueList.children[0] &&
+				currentSelection !== dialogueList.children[1]
+					? (currentSelection.previousSibling.previousSibling.className +=
+							' active')
+					: (currentSelection.className += ' active');
+			} else if (event.key === 'ArrowDown') {
+				currentSelection.nextSibling && currentSelection.nextSibling.nextSibling
+					? (currentSelection.nextSibling.nextSibling.className += ' active')
+					: (currentSelection.className += ' active');
+			} else if (event.key === 'ArrowLeft') {
+				currentSelection !== dialogueList.children[0]
+					? (currentSelection.previousSibling.className += ' active')
+					: (currentSelection.className += ' active');
+			} else if (event.key === 'ArrowRight') {
+				currentSelection !==
+				dialogueList.children[dialogueList.children.length - 1]
+					? (currentSelection.nextSibling.className += ' active')
+					: (currentSelection.className += ' active');
+			} else if (event.key === 'Enter') {
+				let selectedPokemon = myPokemonList.filter((option) => {
+					return option.name === currentSelection.textContent.toLowerCase();
+				});
+				currentSelection.className += ' active';
+
+				if (selectedPokemon[0]) {
+					loadMyPokemon(selectedPokemon[0]);
+					dialogueList.removeEventListener('keydown', pokemonKeyboardSelection);
+
+					dialogueBox.style.display = 'none';
+				}
+			}
+		}
+	);
 }
 
 // Load my pokemon
@@ -266,6 +313,24 @@ function loadMyPokemon(selectedPokemon) {
 			dialogueList.addEventListener('click', function moveSelection(event) {
 				getMoveType(event.target.className, event.target.textContent);
 			});
+
+			document.addEventListener(
+				'keydown',
+				function moveKeyboardSelection(event) {
+					let currentSelection = document.querySelector('.active');
+					console.log(currentSelection);
+
+					if (event.key === 'Enter') {
+						let currentSelection = document.querySelector('.active');
+
+						console.log(currentSelection);
+						getMoveType(
+							currentSelection.classList[0],
+							currentSelection.textContent
+						);
+					}
+				}
+			);
 		}
 	}, 500);
 }

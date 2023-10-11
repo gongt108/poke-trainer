@@ -235,7 +235,8 @@ li {
 	margin-bottom: 10px;
 }
 
-li:hover {
+li:hover,
+li.active {
 	cursor: pointer;
 	text-decoration: underline;
 	font-weight: bold;

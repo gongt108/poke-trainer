@@ -19,9 +19,13 @@ Poké Trainer is a battle simulator. The goal of the simulator is to teach you t
 
 The game uses HTML, CSS, and Vanilla JS. Only the start screen is displayed using HTML. All other elements are displayed and/or created through DOM manipulation. Pokemon data was obtained from the PokeAPI.
 
-## Getting Started
+## Game Link
 
 [Click here](https://gongt108.github.io/poke-trainer/)
+
+## Getting Started
+
+Fork and clone repository into your Desktop. Run index.html either in your Terminal or text editor.
 
 ## Approach Taken
 
