@@ -109,6 +109,20 @@
 	}
 }
 
+@-webkit-keyframes slashed {
+	0% {
+		clip-path: inset(0 0 0 100%);
+	}
+
+	10% {
+		clip-path: inset(0 10% 0 100%);
+	}
+
+	100% {
+		clip-path: inset(0 100% 0 0);
+	}
+}
+
 .pokemon-stats {
 	margin-top: -25px;
 	width: 200px;
